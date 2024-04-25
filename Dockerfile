@@ -5,4 +5,4 @@ WORKDIR /app
 COPY . .
 RUN yarn install --production
 CMD ["node", "./index.js"]
-EXPOSE 4000
+EXPOSE 4000:4000

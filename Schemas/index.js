@@ -36,6 +36,9 @@ const RootQuery = new GraphQLObjectType({
         return movieData.filter(movie => movie.releaseDate.year === args.year)
       }
     },
+    getMovieByTitleText:{
+
+    }
   }
 })
 

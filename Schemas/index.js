@@ -26,14 +26,22 @@ const RootQuery = new GraphQLObjectType({
       type: MovieType,
       args: { id: { type: GraphQLString } },
       resolve( parent, args, context) {
-        return movieData.find(movie => movie.id === args.id)
+        let movie = movieData.find(movie => movie.id === args.id)
+        if(!movie) {
+          throw new Error('Unable to find a movie by that id')
+        }
+        return movie
       }
     },
-    movieByReleaseYear: {
+    moviesByReleaseYear: {
       type: new GraphQLList(MovieType),
       args: { year: { type: GraphQLInt } },
       resolve( parent, args ){
-        return movieData.filter(movie => movie.releaseDate.year === args.year)
+        let movies = movieData.filter(movie => movie.id === args.id)
+        if(!movies) {
+          throw new Error('Unable to find any movies released that year')
+        }
+        return movies
       }
     },
     movieByTitleText:{
@@ -41,7 +49,11 @@ const RootQuery = new GraphQLObjectType({
       args: { title: { type: GraphQLString} },
       resolve( parent, args ) {
         const argsTitle = args.title.toLowerCase();
-        return movieData.filter(movie => movie.titleText.text.toLowerCase().includes(argsTitle))
+        let movies = movieData.filter(movie => movie.titleText.text.toLowerCase().includes(argsTitle))
+        if(!movies) {
+          throw new Error('Unable to find any movies with that title')
+        }
+        return movies
       }
     }
   }

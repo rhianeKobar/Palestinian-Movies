@@ -9,7 +9,8 @@ const {
 } = graphql;
 
 const movieData = require("../palestinian_movies_dataset.json");
-const { MovieType, ImageInputType, ReleaseDateInputType} = require("./typeDefs");
+const { MovieType} = require("./typeDefs");
+const { ImageInputType, ReleaseDateInputType} = require("./inputTypes");
 
 
 const RootQuery = new GraphQLObjectType({

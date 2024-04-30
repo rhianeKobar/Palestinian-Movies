@@ -36,5 +36,5 @@ app.get('/debug/responses', (req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log("Server running");
+  console.log(`Server running on port ${PORT}`);
 });

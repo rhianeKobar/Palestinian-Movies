@@ -129,14 +129,14 @@ input CountryInput {
 
 ## Operations
 - [Queries](#Queries)
-- - [movies](#movies)
-- - [movieById](#movieById)
-- - [moviesByReleaseYear](#moviesByReleaseYear)
-- - [moviesByTitleText](#moviesByTitleText)
+  - [movies](#movies)
+  - [movieById](#movieById)
+  - [moviesByReleaseYear](#moviesByReleaseYear)
+  - [moviesByTitleText](#moviesByTitleText)
 - [Mutations](#Mutations)
-- - [createMovie](#createMovie)
-- - [updateMovie](#updateMovie)
-- - [deleteMovie](#deleteMovie)
+  - [createMovie](#createMovie)
+  - [updateMovie](#updateMovie)
+  - [deleteMovie](#deleteMovie)
 
 ### Queries
 

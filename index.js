@@ -13,8 +13,11 @@ app.use(
   (req, res, next)=> {
     const requestInfo = {
       method: req.method,
+      statusCode: res.statusCode,
       body: req.body,
+      headers: req.rawHeaders,
       timestamp: new Date(),
+
     };
     if(requests.length > 50) {
       requests.shift();

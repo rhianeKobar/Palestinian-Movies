@@ -7,6 +7,14 @@ const { graphqlHTTP } = require("express-graphql");
 const schema = require("./Schemas/index");
 const cors = require("cors");
 const helmet = require("helmet");
+const {rateLimit} = require('express-rate-limit')
+
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  limit: 30, // Limit each IP to 2 requests per `window` (here, per 1 minute)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 
 let requests = [];
@@ -46,8 +54,11 @@ function LogRequest(req, res, next){
   requests.push(requestInfo);
 }
 
+
+
 app.use(cors());
 app.use(express.json());
+app.use(limiter);
 app.use(helmet());
 app.disable("x-powered-by");
 app.use(

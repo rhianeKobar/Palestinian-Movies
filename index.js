@@ -8,47 +8,51 @@ const schema = require("./Schemas/index");
 const cors = require("cors");
 const helmet = require("helmet");
 
+
+let requests = [];
+
 function ValidateApiKey(req, res, next) {
 
 	const apiKey = req.headers["x-api-key"];
 
-	 if (!apiKey) {
-     return res.status(401).json({ error: "API key is missing!" });
-   }
+	if (!apiKey) {
+    res.status(401);
+    LogRequest(req, res);
+    return res.json({ error: "API key is missing!" });
+  }
 
-   if (apiKey !== process.env.API_KEY) {
-     return res.status(403).json({ error: "API key is invalid" });
-   }
+  if (apiKey !== process.env.API_KEY) {
+    res.status(403);
+    LogRequest(req, res); 
+    return res.json({ error: "API key is invalid" });
+  }
 
+  LogRequest(req, res);
 	next();
 
+}
+
+function LogRequest(req, res, next){
+	const requestInfo = {
+    method: req.method,
+    statusCode: res.statusCode,
+    body: req.body,
+    headers: req.rawHeaders,
+    timestamp: new Date(),
+  };
+  if (requests.length > 50) {
+    requests.shift();
+  }
+  requests.push(requestInfo);
 }
 
 app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.disable("x-powered-by");
-
-let requests = [];
 app.use(
   "/graphql",
-	ValidateApiKey,
-  (req, res, next) => {
-
-    const requestInfo = {
-      method: req.method,
-      statusCode: res.statusCode,
-      body: req.body,
-      headers: req.rawHeaders,
-      timestamp: new Date(),
-
-    };
-    if(requests.length > 50) {
-      requests.shift();
-    }
-    requests.push(requestInfo);
-    next();
-  },
+  ValidateApiKey,
   graphqlHTTP({
     schema,
     graphiql: true,

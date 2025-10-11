@@ -7,6 +7,7 @@ const { graphqlHTTP } = require("express-graphql");
 const schema = require("./Schemas/index");
 const cors = require("cors");
 const helmet = require("helmet");
+const crypto = require('crypto');
 const {rateLimit} = require('express-rate-limit')
 
 const limiter = rateLimit({
@@ -58,9 +59,10 @@ function LogRequest(req, res, next){
 
 app.use(cors());
 app.use(express.json());
-app.use(limiter);
-app.use(helmet());
-app.disable("x-powered-by");
+app.use(limiter);app.use((req, res, next) => {
+  res.locals.cspNonce = crypto.randomBytes(32).toString("hex");
+  next();
+});
 app.use(
   "/graphql",
   // ValidateApiKey,
@@ -69,10 +71,18 @@ app.use(
     graphiql: true,
   })
 );
-
 app.get('/debug/responses', (req, res) => {
   res.json(requests);
 });
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        scriptSrc: ["'self'", (req, res) => `'nonce-${res.locals.cspNonce}'`],
+      },
+    },
+  }),
+);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

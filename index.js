@@ -19,26 +19,26 @@ const limiter = rateLimit({
 
 let requests = [];
 
-function ValidateApiKey(req, res, next) {
+// function ValidateApiKey(req, res, next) {
 
-	const apiKey = req.headers["x-api-key"];
+// 	const apiKey = req.headers["x-api-key"];
 
-	if (!apiKey) {
-    res.status(401);
-    LogRequest(req, res);
-    return res.json({ error: "API key is missing!" });
-  }
+// 	if (!apiKey) {
+//     res.status(401);
+//     LogRequest(req, res);
+//     return res.json({ error: "API key is missing!" });
+//   }
 
-  if (apiKey !== process.env.API_KEY) {
-    res.status(403);
-    LogRequest(req, res); 
-    return res.json({ error: "API key is invalid" });
-  }
+//   if (apiKey !== process.env.API_KEY) {
+//     res.status(403);
+//     LogRequest(req, res); 
+//     return res.json({ error: "API key is invalid" });
+//   }
 
-  LogRequest(req, res);
-	next();
+//   LogRequest(req, res);
+// 	next();
 
-}
+// }
 
 function LogRequest(req, res, next){
 	const requestInfo = {
@@ -63,7 +63,7 @@ app.use(helmet());
 app.disable("x-powered-by");
 app.use(
   "/graphql",
-  ValidateApiKey,
+  // ValidateApiKey,
   graphqlHTTP({
     schema,
     graphiql: true,
